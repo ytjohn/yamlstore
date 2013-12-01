@@ -95,12 +95,16 @@ get members from tag:
   - /get/members/tag1
 
 
-### Thoughts
+### Initial implementation
 
- - Could be doable with bottle + python
+ - put a /api/v1/ in front of api, so it can evolve over time
+ - make sure version number makes it to function
+
+### Feature Ideas
+
  - Perhaps a json export option (add /json to end of url)
  - Git commit hooks could push on commit
  - devicedb-core would be super minimal
  - worry about authentication and frontend later
-
+ - possibly multiple "namespaces" (ie, one per client)
 
