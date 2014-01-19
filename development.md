@@ -60,9 +60,29 @@ tag1:
       - server1
 
 
+### NEW (20131201) api schema
+
+urls:
+
+ /api/v<version>/<namespace>/<category>/<name>/<attribute>/<value>
+
+basic:
+ /api/v:version/:namespace/:category/:name   (GET=fetch, POST=replace/create/delete)
+ /api/v:version/:namespace/:category/:name/:key (GET=fetch, POST=replace/create/delete)
+
+special notes:
+  POST
+    action=delete (deletes the object/attribute)
+    action=add (adds a value to a key)
+    action=update (updates the object)
+
+  If 'update' and object does not exist, create. This may require recursively creating directories and/or objects
+  Each namespace is it's own git repository and should be created administratively (or out of band)
+  Secial case: if deleting a 'device' object, remove it from tags?
 
 
-### URL/API
+d
+### ORIGINAL URL/API
 
 get full entry
 

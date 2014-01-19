@@ -1,5 +1,6 @@
-from bottle import route, run
+from bottle import route, run, error
 import yaml
+import os, os.path
 
 def config():
   basedir = '/Users/jhogenmiller/devel/devicedb/data'
@@ -9,23 +10,35 @@ def config():
   }
   return dirs
 
-@route('/hello')
-def hello():
-  dirs = config()
-  tag1file = open('%s/tag1' % dirs['tagdata'], 'r')
-  test1file = open('%s/test1' % dirs['devicedata'], 'r')
-  tag1data = load(tag1file)
-  print tag1data
-
-  return tag1data['members']
-
 @route('/api/v<version:int>/show/<category>/')
 @route('/api/v<version:int>/show/<category>/<id>')
 def showtags(version, category, id=None):
+
   if id == None:
-    return "show all %s" % category
+    return yaml.dump(getall(category))
 
   return yaml.dump(getitem(category, id))
+
+def getall(type):
+  dirs = config()
+
+  if type == 'tags':
+    path = dirs['tagdata']
+  elif type == 'devices':
+    path = dirs['devicedata']
+
+  items = {
+    type: []
+  }
+
+  for root, _, files in os.walk(path):
+    for f in files:
+      if f == '.gitkeep':
+        continue
+      else:
+        items[type].append(f)
+
+  return items
 
 
 def getitem(type, id):
@@ -50,5 +63,12 @@ def getitem(type, id):
   data = yaml.load(datafile)
   return data
 
+#@error(403)
+def mistake403(code):
+    return 'There is a mistake in your url! %s' % code
+
+@error(404)
+def mistake404(code):
+    return 'Sorry, this page does not exist!'
 
 run(host='localhost', port=8080, debug=True)
