@@ -24,15 +24,12 @@ def config():
 @route('/api/v<version:int>/<namespace>', method='GET')
 @route('/api/v<version:int>/<namespace>/', method='GET')
 @route('/api/v<version:int>/<namespace>/<path:path>', method='GET')
-#@route('/api/v<version:int>/<namespace>/<category>/<name>', method='GET')
-#@route('/api/v<version:int>/<namespace>/<category>/<name>/<key>', method='GET')
 def show(version, namespace=None, path=None):
   """
 
   @param namespace:
   @param category:
-  @param name:
-  @param key:
+  @param path:
   @return:
   """
   
@@ -81,8 +78,13 @@ def showFile(fullpath):
     """ Simply read in a file and return it straight up"""
     
     f = open(fullpath, 'r')
-    content = f.read()
-    return content
+    
+    # I do a yaml.load and yaml.dump in order to parse the content and
+    # (in theory) return only valid yaml.
+    content = yaml.load(f.read())
+    f.close()
+    
+    return yaml.dump(content)
     
     
 def getItem(base, path):
@@ -111,7 +113,7 @@ def getItem(base, path):
     if os.path.isdir(curpath):
         return listdirectory(curpath)
     elif os.path.isfile(curpath):
-        # Of course, we would also like to split this out to show individual keys
+        # Of course, we would also like to eventually split this out to show individual keys
         return showFile(curpath)
     else:
         return None
