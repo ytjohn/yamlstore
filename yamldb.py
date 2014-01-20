@@ -94,9 +94,10 @@ def updatefile(namespace, path, data="filler: blank"):
         return (False, 'Namespace creation failure: %s' % checknamespace[1])
     
     # Is it already a file?
-    if os.path.isfile(fullpath):
-        return (True, 'Already a file. Just need to update it!')
-    elif os.path.isdir(fullpath):
+    # if os.path.isfile(fullpath):
+    #     # return (True, 'Already a file. Just need to update it!')
+    #     return writefile(namespacepath, path, data)
+    if os.path.isdir(fullpath):
         return (False, 'This is a directory, can not update!')
     
     # Now we are left with a non-file or directory that we have to create.
